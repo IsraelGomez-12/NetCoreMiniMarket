@@ -1,0 +1,135 @@
+﻿@model TestMarzan.ViewModel.OrderViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+
+
+<p>
+    <a href="#" class="btn-primary" data-toggle="modal" data-target="#orderModal">Create Order</a>
+</p>
+
+<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label class="control-label">Customer</label>
+                        @Html.DropDownListFor(c => c.CostumerId, new SelectList(Model.Customers, "Id", "FullName"), "Selecione Producto", htmlAttributes: new { id = "CostumerId", name = "CostumerId" })
+                        <span asp-validation-for="Customers" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Products" class="control-label"></label> <br />
+                        @foreach (var product in Model.Products)
+                        {
+                            <input name="productList" id="productList" type="checkbox" value="@product.Id" /> @product.Name <br />
+                        }
+
+                        <span asp-validation-for="Products" class="text-danger"></span>
+
+                    </div>
+                    <div class="form-group">
+                        <input style="margin-left:40%" type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.orders.Count() == 0)
+{
+    <h2>There is no products created</h2>
+}
+else
+{
+    <form asp-action="Index" method="get">
+        <p>
+            Search: <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Buscar" class="btn btn-outline-secondary" />
+        </p>
+
+    </form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Order Number
+                </th>
+                <th>
+                    Costumer Name
+                </th>
+                <th>
+                    Product Count
+                </th>
+                <th>
+                    Products Name
+                </th>
+                <th>
+                    Total Price
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.orders)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NameCustomer)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProductCount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Products)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalPrice)
+                    </td>
+                    <td>
+                        <a href="#" class="btn-primary editModal" id="@item.Id">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+    @section Scripts {
+        <script>
+
+            $(function () {
+
+
+                $(".editModal").click(function () {
+
+                    //modal-body
+                    $.get("./Orders/Edit/" + $(this).attr("id"), function (htmlData) {
+                        $(".modal-body").html(htmlData);
+                        $('#orderModal').modal('show');
+                    });
+
+
+
+
+                });
+
+            })
+
+
+        </script>
+    }
