@@ -24,7 +24,7 @@
 
                     <div class="form-group">
                         <label class="control-label">Customer</label>
-                        @Html.DropDownListFor(c => c.CostumerId, new SelectList(Model.Customers, "Id", "FullName"), "Selecione Producto", htmlAttributes: new { id = "CostumerId", name = "CostumerId" })
+                        @Html.DropDownListFor(c => c.CostumerId, new SelectList(Model.Customers, "Id", "FullName"), "Selecione Cliente", htmlAttributes: new { id = "CostumerId", name = "CostumerId" })
                         <span asp-validation-for="Customers" class="text-danger"></span>
                     </div>
                     <div class="form-group">
